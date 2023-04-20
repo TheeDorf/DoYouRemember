@@ -18,6 +18,7 @@ function MemoryGame() {
   const [shuffledLetters, setShuffledLetters] = useState([]);
   const [selectedLetters, setSelectedLetters] = useState([]);
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
+  const [showLetter, setShowLetter] = useState(false);
 
   useEffect(() => {
     setShuffledLetters(shuffle(LETTERS));
@@ -41,6 +42,7 @@ function MemoryGame() {
   const handleStartGame = () => {
     setGameStatus("playing");
     setCurrentLetterIndex(0);
+    setShowLetter(true);
   };
 
   const handleLetterClick = (letter) => {
@@ -49,6 +51,7 @@ function MemoryGame() {
       if (letter === expectedLetter) {
         setSelectedLetters([...selectedLetters, letter]);
         setCurrentLetterIndex(currentLetterIndex + 1);
+        setShowLetter(true);
       } else {
         setGameStatus("done");
       }
@@ -63,6 +66,14 @@ function MemoryGame() {
     setCurrentLetterIndex(0);
   };
 
+  useEffect(() => {
+    if (showLetter) {
+      setTimeout(() => {
+        setShowLetter(false);
+      }, 1000);
+    }
+  }, [showLetter]);
+
   return (
     <div className="memory-game">
       <h1>Memory Game</h1>
@@ -74,9 +85,9 @@ function MemoryGame() {
       )}
       {gameStatus === "playing" && (
         <div className="letter-container">
-          <div className="letter">
-            {shuffledLetters[currentLetterIndex]}
-          </div>
+          {showLetter && (
+            <div className="letter">{shuffledLetters[currentLetterIndex]}</div>
+          )}
         </div>
       )}
       {gameStatus === "done" && (
